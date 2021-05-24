@@ -1,0 +1,10 @@
+
+build/CMakeFiles/
+
+cmake-build-debug/CMakeFiles/
+
+.idea/
+
+build/
+
+cmake-build-debug/
