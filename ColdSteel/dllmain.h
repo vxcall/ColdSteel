@@ -1,5 +1,6 @@
 #pragma once
 #include <Windows.h>
+#include <utility>
 #include <vector>
 #include <iostream>
 #include <optional>
@@ -29,6 +30,8 @@
 
 class OffsetInfo {
 public:
+    OffsetInfo(std::string name, std::string type, std::vector<DWORD>& vecOffset) : name(std::move(name)), type(std::move(type)), vecOffset(std::move(vecOffset)) {
+    }
     std::string name;
     std::string type;
     std::vector<DWORD> vecOffset;
