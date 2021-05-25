@@ -5,7 +5,7 @@
 
 namespace offset {
     //<Remnant-Win64-Shipping.exe>
-    std::vector<DWORD> dwLocalPlayer = {0x03364D18, 0x0, 0x20};
+    std::vector<DWORD> dwLocalPlayer = {0x03364D18, 0x0, 0x20, 0x0};
     std::vector<DWORD> m_health = {0x870};
     std::vector<DWORD> m_stamina = {0xEA8, 0x140};
     std::vector<DWORD> m_xAxis = {0x3A0, 0x1A0};

@@ -4,7 +4,7 @@
 #include <vector>
 #include <iostream>
 #include <optional>
-#include "offset.h"
+#include "Offset.h"
 
 #define DEBUG
 
@@ -36,6 +36,7 @@ public:
     std::string type;
     std::vector<DWORD> vecOffset;
 };
+
 
 template <typename T>
 auto GetDynamicAddress(uintptr_t& moduleBase, std::vector<DWORD> offsets) -> std::optional<T*> {
