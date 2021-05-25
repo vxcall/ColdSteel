@@ -49,6 +49,44 @@ DWORD WINAPI fMain(LPVOID lpParameter)
     OffsetInfo stamina("Stamina", "float", staminaOffset);
     pointers.push_back(stamina);
 
+    std::vector<DWORD> xAxisOffset = offset::m_xAxis;
+    xAxisOffset.insert(xAxisOffset.begin(), offset::dwLocalPlayer.begin(), offset::dwLocalPlayer.end());
+    OffsetInfo xAxis("xAxis", "float", xAxisOffset);
+    pointers.push_back(xAxis);
+
+    std::vector<DWORD> yAxisOffset = offset::m_yAxis;
+    yAxisOffset.insert(yAxisOffset.begin(), offset::dwLocalPlayer.begin(), offset::dwLocalPlayer.end());
+    OffsetInfo yAxis("yAxis", "float", yAxisOffset);
+    pointers.push_back(yAxis);
+
+    std::vector<DWORD> zAxisOffset = offset::m_zAxis;
+    zAxisOffset.insert(zAxisOffset.begin(), offset::dwLocalPlayer.begin(), offset::dwLocalPlayer.end());
+    OffsetInfo zAxis("zAxis", "float", zAxisOffset);
+    pointers.push_back(zAxis);
+
+    std::vector<DWORD> pitchOffset = offset::m_pitch;
+    pitchOffset.insert(pitchOffset.begin(), offset::dwLocalPlayer.begin(), offset::dwLocalPlayer.end());
+    OffsetInfo pitch("pitch", "float", pitchOffset);
+    pointers.push_back(pitch);
+
+    std::vector<DWORD> yawOffset = offset::m_yaw;
+    yawOffset.insert(yawOffset.begin(), offset::dwLocalPlayer.begin(), offset::dwLocalPlayer.end());
+    OffsetInfo yaw("yaw", "float", yawOffset);
+    pointers.push_back(yaw);
+
+    std::vector<DWORD> dragonHeartOffset = offset::m_dragonHeart;
+    dragonHeartOffset.insert(dragonHeartOffset.begin(), offset::dwLocalPlayer.begin(), offset::dwLocalPlayer.end());
+    OffsetInfo dragonHeart("dragonHeart", "int", dragonHeartOffset);
+    pointers.push_back(dragonHeart);
+
+    std::vector<DWORD> ammoOffset = offset::ammo;
+    OffsetInfo ammo("ammo", "int", ammoOffset);
+    pointers.push_back(ammo);
+
+    std::vector<DWORD> skillOffset = offset::skill;
+    OffsetInfo skill("skill", "int", skillOffset);
+    pointers.push_back(skill);
+
     int estimatedLines = pointers.size();
 
     while(true)
