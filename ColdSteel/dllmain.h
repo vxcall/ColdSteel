@@ -5,6 +5,7 @@
 #include <iostream>
 #include <optional>
 #include "Offset.h"
+#include "Entity.h"
 
 #define DEBUG
 
@@ -30,28 +31,34 @@
 
 class OffsetInfo {
 public:
-    OffsetInfo(std::string name, std::string type, std::vector<DWORD>& vecOffset) : name(std::move(name)), type(std::move(type)), vecOffset(std::move(vecOffset)) {
+    OffsetInfo(std::string name, std::string type, std::vector<uintptr_t>& vecOffset) : name(std::move(name)), type(std::move(type)), vecOffset(std::move(vecOffset)) {
     }
     std::string name;
     std::string type;
-    std::vector<DWORD> vecOffset;
+    std::vector<uintptr_t> vecOffset;
 };
 
+template<typename T>
+auto GetDynamicAddress(const uintptr_t moduleBase, std::vector<uintptr_t> offsets) -> T* {
+     uintptr_t dummy = *reinterpret_cast<uintptr_t*>(moduleBase + offsets.at(0));
 
-template <typename T>
-auto GetDynamicAddress(uintptr_t& moduleBase, std::vector<DWORD> offsets) -> std::optional<T*> {
-    uintptr_t base = *reinterpret_cast<uintptr_t*>(moduleBase + offsets.at(0));
-    std::optional<T*> result;
+    if (!dummy)
+        return nullptr;
+
+    T* result;
+
     offsets.erase(offsets.begin());
+
     for (short i=0; i<offsets.size(); ++i) {
-        if (!base) {
-            return {};
-        }
         if (i != offsets.size()-1) {
-            base = *reinterpret_cast<uintptr_t*>(base+offsets.at(i));
+            dummy = *reinterpret_cast<uintptr_t*>(dummy+offsets.at(i));
         } else {
-            result = reinterpret_cast<T*>(base + offsets.at(i));
+            result = reinterpret_cast<T*>(dummy + offsets.at(i));
         }
+
+        if (!dummy)
+          return nullptr;
     }
-    return result;
+
+    return reinterpret_cast<T*>(result);
 }

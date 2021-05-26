@@ -1,6 +1,4 @@
 #include "dllmain.h"
-#include <iostream>
-#include "Entity.h"
 
 void Detach()
 {
@@ -17,17 +15,17 @@ auto PrintSign() -> void {
     std::cout << std::endl << std::endl;
 }
 
-auto PrintInformation(uintptr_t moduleBase, const std::vector<OffsetInfo>& offsetInfos) -> void {
+auto PrintInformation(uintptr_t moduleBase, std::vector<OffsetInfo>& offsetInfos) -> void {
    for (auto& oi : offsetInfos) {
        if (oi.type == "float") {
-           std::optional<float*> dynamicAddress = GetDynamicAddress<float>(moduleBase, oi.vecOffset);
-           if (dynamicAddress != std::nullopt) {
-               std::cout << "\r\033[91m[-] " << oi.name << "       \033[39m-> " << *dynamicAddress.value() << "       " << std::endl;
+           float* dynamicAddress = GetDynamicAddress<float>(moduleBase, oi.vecOffset);
+           if (dynamicAddress) {
+               std::cout << "\r\033[91m[-] " << oi.name << "       \033[39m-> " << *dynamicAddress << "       " << std::endl;
            }
        } else if (oi.type == "int") {
-           std::optional<int*> dynamicAddress = GetDynamicAddress<int>(moduleBase, oi.vecOffset);
-           if (dynamicAddress != std::nullopt) {
-               std::cout << "\r\033[91m[-] " << oi.name << "       \033[39m-> " << *dynamicAddress.value() << "       " << std::endl;
+           int* dynamicAddress = GetDynamicAddress<int>(moduleBase, oi.vecOffset);
+           if (dynamicAddress) {
+               std::cout << "\r\033[91m[-] " << oi.name << "       \033[39m-> " << *dynamicAddress << "       " << std::endl;
            }
        }
    }
@@ -39,16 +37,14 @@ DWORD WINAPI fMain(LPVOID lpParameter)
     PrintSign();
     uintptr_t moduleBase = reinterpret_cast<uintptr_t>(GetModuleHandle("Remnant-Win64-Shipping.exe"));
 
-
-
     //int estimatedLines = pointers.size();
 
     while(true)
     {
         if (GetAsyncKeyState(VK_DELETE) & 1) break;
-        std::optional<Entity*> localPlayer = GetDynamicAddress<Entity>(moduleBase, offset::dwLocalPlayer);
-        if (localPlayer != std::nullopt) {
-            std::cout << localPlayer.value()->staminaClass->stamina << std::endl;
+        auto* localPlayer = GetDynamicAddress<Entity>(moduleBase, offset::dwLocalPlayer);
+        if (localPlayer) {
+            std::cout << localPlayer->view->angle.x << std::endl;
         }
         //PrintInformation(moduleBase, pointers);
         //std::cout << "\033[" << estimatedLines << "F";
