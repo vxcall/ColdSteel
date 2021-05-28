@@ -1,11 +1,13 @@
 #pragma once
+
 #include <Windows.h>
 #include <utility>
 #include <vector>
-#include <iostream>
 #include <optional>
 #include "Offset.h"
 #include "Entity.h"
+#include "Rendering/HookD3D11.h"
+#include "Hook.h"
 
 #define DEBUG
 
@@ -28,15 +30,6 @@
 #define ALLOCCONSOLE()
 #define FREECONSOLE()
 #endif
-
-class OffsetInfo {
-public:
-    OffsetInfo(std::string name, std::string type, std::vector<uintptr_t>& vecOffset) : name(std::move(name)), type(std::move(type)), vecOffset(std::move(vecOffset)) {
-    }
-    std::string name;
-    std::string type;
-    std::vector<uintptr_t> vecOffset;
-};
 
 template<typename T>
 auto GetDynamicAddress(const uintptr_t moduleBase, std::vector<uintptr_t> offsets) -> T* {

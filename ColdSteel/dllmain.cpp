@@ -1,4 +1,5 @@
 #include "dllmain.h"
+#include <iostream>
 
 void Detach()
 {
@@ -15,41 +16,22 @@ auto PrintSign() -> void {
     std::cout << std::endl << std::endl;
 }
 
-auto PrintInformation(uintptr_t moduleBase, std::vector<OffsetInfo>& offsetInfos) -> void {
-   for (auto& oi : offsetInfos) {
-       if (oi.type == "float") {
-           float* dynamicAddress = GetDynamicAddress<float>(moduleBase, oi.vecOffset);
-           if (dynamicAddress) {
-               std::cout << "\r\033[91m[-] " << oi.name << "       \033[39m-> " << *dynamicAddress << "       " << std::endl;
-           }
-       } else if (oi.type == "int") {
-           int* dynamicAddress = GetDynamicAddress<int>(moduleBase, oi.vecOffset);
-           if (dynamicAddress) {
-               std::cout << "\r\033[91m[-] " << oi.name << "       \033[39m-> " << *dynamicAddress << "       " << std::endl;
-           }
-       }
-   }
-}
-
 DWORD WINAPI fMain(LPVOID lpParameter)
 {
     ALLOCCONSOLE()
     PrintSign();
-    uintptr_t moduleBase = reinterpret_cast<uintptr_t>(GetModuleHandle("Remnant-Win64-Shipping.exe"));
-
-    //int estimatedLines = pointers.size();
+    auto moduleBase = reinterpret_cast<uintptr_t>(GetModuleHandle("Remnant-Win64-Shipping.exe"));
+    Hook::Init();
+    HookD3D11::Place();
 
     while(true)
     {
         if (GetAsyncKeyState(VK_DELETE) & 1) break;
         auto* localPlayer = GetDynamicAddress<Entity>(moduleBase, offset::dwLocalPlayer);
-        if (localPlayer) {
-            std::cout << localPlayer->view->angle.x << std::endl;
-        }
-        //PrintInformation(moduleBase, pointers);
-        //std::cout << "\033[" << estimatedLines << "F";
         Sleep(50);
     }
+    Hook::Uninit();
+    FREECONSOLE()
     FreeLibraryAndExitThread(static_cast<HMODULE>(lpParameter), EXIT_SUCCESS);
 }
 
