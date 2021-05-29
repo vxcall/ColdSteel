@@ -664,7 +664,7 @@ struct IMGUI_API ImChunkStream
 // perpendicular to X axis. Follow steps in the article from this starting condition and you will
 // will get this result.
 //
-// Rendering circles with an odd number of segments, while mathematically correct will produce
+// HookD3D11 circles with an odd number of segments, while mathematically correct will produce
 // asymmetrical results on the raster grid. Therefore we're rounding N to next even number (7->8, 8->8, 9->10 etc.)
 //
 #define IM_ROUNDUP_TO_EVEN(_V)                                  ((((_V) + 1) / 2) * 2)

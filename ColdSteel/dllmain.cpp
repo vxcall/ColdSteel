@@ -31,6 +31,7 @@ DWORD WINAPI fMain(LPVOID lpParameter)
         Sleep(50);
     }
     Hook::Uninit();
+    SetWindowLongPtr(HookD3D11::hWnd, GWLP_WNDPROC, (LONG_PTR)HookD3D11::originalWndProc);
     FREECONSOLE()
     FreeLibraryAndExitThread(static_cast<HMODULE>(lpParameter), EXIT_SUCCESS);
 }

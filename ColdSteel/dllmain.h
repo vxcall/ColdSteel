@@ -6,8 +6,9 @@
 #include <optional>
 #include "Offset.h"
 #include "Entity.h"
-#include "Rendering/HookD3D11.h"
 #include "Hook.h"
+#include "HookD3D11/Present.h"
+#include "HookD3D11/WndProc.h"
 
 #define DEBUG
 

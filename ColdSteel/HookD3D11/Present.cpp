@@ -1,14 +1,26 @@
-#include "HookD3D11.h"
+#include "Present.h"
 #include <iostream>
 
 namespace HookD3D11 {
     HWND hWnd = nullptr;
+    //Save pSwapChain for v-table hooking
     IDXGISwapChain* pSwapChain = nullptr;
+    //Save pDevice and pDeviceContext for initializing imgui
     ID3D11Device* pDevice = nullptr;
     ID3D11DeviceContext* pDeviceContext = nullptr;
 }
 
 auto HookD3D11::InitImgui() -> void {
+    if (hWnd) {
+        HookD3D11::originalWndProc = reinterpret_cast<WNDPROC>(SetWindowLongPtr(hWnd, GWLP_WNDPROC, (__int3264)(LONG_PTR)HookD3D11::hkWndProc));
+        IMGUI_CHECKVERSION();
+        ImGuiContext* context = ImGui::CreateContext();
+        ImGui::SetCurrentContext(context);
+        ImGuiIO& io = ImGui::GetIO(); (void)io;
+        ImGui::StyleColorsDark();
+        ImGui_ImplWin32_Init(hWnd);
+        ImGui_ImplDX11_Init(pDevice, pDeviceContext);
+    }
 }
 
 auto CreateD3D11SwapChainDeviceContext() -> bool {
@@ -31,9 +43,9 @@ auto CreateD3D11SwapChainDeviceContext() -> bool {
     HRESULT hResult = D3D11CreateDeviceAndSwapChain(nullptr, D3D_DRIVER_TYPE_HARDWARE, nullptr, 0, nullptr, 0, D3D11_SDK_VERSION, &swapChainDesc, &HookD3D11::pSwapChain, &HookD3D11::pDevice, &featureLevel, &HookD3D11::pDeviceContext);
     if (FAILED(hResult)) {
         std::cout << "[Error] Failed Creating Device and SwapChain" << std::endl;
-        return {false};
+        return false;
     }
-    return  {true};
+    return  true;
 }
 
 using tPresent = HRESULT(__thiscall*) (IDXGISwapChain* pThis, UINT SyncInterval, UINT Flags);
@@ -45,9 +57,15 @@ auto __fastcall hkPresent(IDXGISwapChain* pThis, UINT SyncInterval, UINT Flags) 
         HookD3D11::InitImgui();
         isInited = true;
     } else {
-       //RENDERING
+        ImGui_ImplDX11_NewFrame();
+        ImGui_ImplWin32_NewFrame();
+        ImGui::NewFrame();
+        ImGui::Begin("Cold Steel");
+        ImGui::Text("Hello this is Cold Steel!");
+        ImGui::End();
+        ImGui::Render();
+        ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
     }
-    std::cout << "Present has been hooked!" << std::endl;
     return oPresent(pThis, SyncInterval, Flags);
 }
 
