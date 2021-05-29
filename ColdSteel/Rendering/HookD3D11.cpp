@@ -29,12 +29,18 @@ auto CreateD3D11SwapChainDeviceContext() -> std::tuple<bool, IDXGISwapChain*, ID
     return  {true, pSwapChain, pDevice, pDeviceContext};
 }
 
+using tPresent = HRESULT(__thiscall*) (IDXGISwapChain* pThis, UINT SyncInterval, UINT Flags);
+tPresent oPresent = nullptr;
+
+auto __fastcall hkPresent(IDXGISwapChain* pThis, UINT SyncInterval, UINT Flags) -> HRESULT {
+    std::cout << "Present has been hooked!" << std::endl;
+    return oPresent(pThis, SyncInterval, Flags);
+}
+
 auto HookD3D11::Place() -> void {
     auto[status, pSwapChain, pDevice, pDeviceContext] = CreateD3D11SwapChainDeviceContext();
     if (status) {
         void** pSwapChainTable = *reinterpret_cast<void***>(pSwapChain);
-        //create hkPresent
-        //make oPresent = nullptr
-        //something like Hook(pSwapChainTable[8], &hkPresent, &oPresent)
+        Hook::Hook(pSwapChainTable[8], &hkPresent, &oPresent);
     }
 }
