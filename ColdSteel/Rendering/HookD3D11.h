@@ -5,4 +5,5 @@
 
 namespace HookD3D11 {
     auto Place() -> void;
+    auto InitImgui() -> void;
 }
