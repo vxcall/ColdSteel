@@ -20,14 +20,14 @@ DWORD WINAPI fMain(LPVOID lpParameter)
 {
     ALLOCCONSOLE()
     PrintSign();
-    auto moduleBase = reinterpret_cast<uintptr_t>(GetModuleHandle("Remnant-Win64-Shipping.exe"));
+    //auto moduleBase = reinterpret_cast<uintptr_t>(GetModuleHandle("Remnant-Win64-Shipping.exe"));
     Hook::Init();
     HookD3D11::Place();
 
     while(true)
     {
         if (GetAsyncKeyState(VK_DELETE) & 1) break;
-        auto* localPlayer = GetDynamicAddress<Entity>(moduleBase, offset::dwLocalPlayer);
+        //auto* localPlayer = GetDynamicAddress<Entity>(moduleBase, offset::dwLocalPlayer);
         Sleep(50);
     }
     Hook::Uninit();

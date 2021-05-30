@@ -1,6 +1,7 @@
 #include "Present.h"
 #include <iostream>
 
+
 namespace HookD3D11 {
     HWND hWnd = nullptr;
     //Save pSwapChain for v-table hooking
@@ -8,18 +9,32 @@ namespace HookD3D11 {
     //Save pDevice and pDeviceContext for initializing imgui
     ID3D11Device* pDevice = nullptr;
     ID3D11DeviceContext* pDeviceContext = nullptr;
+    ID3D11RenderTargetView*  pRenderTargetView = NULL;
+}
+
+void CreateRenderTarget()
+{
+    ID3D11Texture2D* pBackBuffer;
+    HookD3D11::pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer);
+    HookD3D11::pDevice->CreateRenderTargetView(pBackBuffer, NULL, &HookD3D11::pRenderTargetView);
+    pBackBuffer->Release();
+}
+
+void CleanupRenderTarget()
+{
+    if (HookD3D11::pRenderTargetView) { HookD3D11::pRenderTargetView->Release(); HookD3D11::pRenderTargetView = NULL; }
 }
 
 auto HookD3D11::InitImgui() -> void {
     if (hWnd) {
         HookD3D11::originalWndProc = reinterpret_cast<WNDPROC>(SetWindowLongPtr(hWnd, GWLP_WNDPROC, (__int3264)(LONG_PTR)HookD3D11::hkWndProc));
         IMGUI_CHECKVERSION();
-        ImGuiContext* context = ImGui::CreateContext();
-        ImGui::SetCurrentContext(context);
+        ImGui::CreateContext();
         ImGuiIO& io = ImGui::GetIO(); (void)io;
         ImGui::StyleColorsDark();
         ImGui_ImplWin32_Init(hWnd);
         ImGui_ImplDX11_Init(pDevice, pDeviceContext);
+        CreateRenderTarget();
     }
 }
 
@@ -50,22 +65,28 @@ auto CreateD3D11SwapChainDeviceContext() -> bool {
 
 using tPresent = HRESULT(__thiscall*) (IDXGISwapChain* pThis, UINT SyncInterval, UINT Flags);
 tPresent oPresent = nullptr;
-
+#include <iostream>
 auto __fastcall hkPresent(IDXGISwapChain* pThis, UINT SyncInterval, UINT Flags) -> HRESULT {
-    static bool isInited = false;
-    if (!isInited) {
+    static std::once_flag isInited;
+    std::call_once(isInited, [&]() {
+        HookD3D11::pSwapChain = pThis;
+        if (SUCCEEDED(HookD3D11::pSwapChain->GetDevice(__uuidof(ID3D11Device), (PVOID*)&HookD3D11::pDevice))) {
+            HookD3D11::pDevice->GetImmediateContext(&HookD3D11::pDeviceContext);
+        }
         HookD3D11::InitImgui();
-        isInited = true;
-    } else {
-        ImGui_ImplDX11_NewFrame();
-        ImGui_ImplWin32_NewFrame();
-        ImGui::NewFrame();
-        ImGui::Begin("Cold Steel");
-        ImGui::Text("Hello this is Cold Steel!");
-        ImGui::End();
-        ImGui::Render();
-        ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
-    }
+        ImGui::GetIO().ImeWindowHandle = HookD3D11::hWnd;
+    });
+    ImGui_ImplDX11_NewFrame();
+    ImGui_ImplWin32_NewFrame();
+    ImGui::NewFrame();
+    ImGui::Begin("Cold Steel");
+    ImGui::Text("Hack menu");
+    ImGui::End();
+    ImGui::EndFrame();
+    ImGui::Render();
+    HookD3D11::pDeviceContext->OMSetRenderTargets(1, &HookD3D11::pRenderTargetView, NULL);
+    ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+
     return oPresent(pThis, SyncInterval, Flags);
 }
 

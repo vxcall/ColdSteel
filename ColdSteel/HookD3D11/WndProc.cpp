@@ -11,6 +11,7 @@ extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg
     if (ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, lParam)) {
         return true;
     }
+
     return CallWindowProc(HookD3D11::originalWndProc, hWnd, msg, wParam, lParam);
 }
 
