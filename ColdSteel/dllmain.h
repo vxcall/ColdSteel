@@ -9,6 +9,7 @@
 #include "Hook.h"
 #include "HookD3D11/Present.h"
 #include "HookD3D11/WndProc.h"
+#include "HackFlags.h"
 
 #define DEBUG
 

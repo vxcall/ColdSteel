@@ -7,10 +7,13 @@
 #include "imgui_impl_dx11.h"
 #include "../Hook.h"
 #include "WndProc.h"
+#include "../HackFlags.h"
 
 namespace HookD3D11 {
     auto Place() -> void;
     auto InitImgui() -> void;
+    auto CreateRenderTarget() -> void;
+    auto CleanupRenderTarget() -> void;
     extern HWND hWnd;
     extern IDXGISwapChain* pSwapChain;
     extern ID3D11Device* pDevice;

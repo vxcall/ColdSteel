@@ -12,22 +12,20 @@ namespace HookD3D11 {
     ID3D11RenderTargetView*  pRenderTargetView = NULL;
 }
 
-void CreateRenderTarget()
-{
+auto HookD3D11::CreateRenderTarget() -> void {
     ID3D11Texture2D* pBackBuffer;
     HookD3D11::pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer);
     HookD3D11::pDevice->CreateRenderTargetView(pBackBuffer, NULL, &HookD3D11::pRenderTargetView);
     pBackBuffer->Release();
 }
 
-void CleanupRenderTarget()
-{
+auto HookD3D11::CleanupRenderTarget() -> void {
     if (HookD3D11::pRenderTargetView) { HookD3D11::pRenderTargetView->Release(); HookD3D11::pRenderTargetView = NULL; }
 }
 
 auto HookD3D11::InitImgui() -> void {
     if (hWnd) {
-        HookD3D11::originalWndProc = reinterpret_cast<WNDPROC>(SetWindowLongPtr(hWnd, GWLP_WNDPROC, (__int3264)(LONG_PTR)HookD3D11::hkWndProc));
+        HookD3D11::HookWndProc();
         IMGUI_CHECKVERSION();
         ImGui::CreateContext();
         ImGuiIO& io = ImGui::GetIO(); (void)io;
@@ -65,7 +63,7 @@ auto CreateD3D11SwapChainDeviceContext() -> bool {
 
 using tPresent = HRESULT(__thiscall*) (IDXGISwapChain* pThis, UINT SyncInterval, UINT Flags);
 tPresent oPresent = nullptr;
-#include <iostream>
+
 auto __fastcall hkPresent(IDXGISwapChain* pThis, UINT SyncInterval, UINT Flags) -> HRESULT {
     static std::once_flag isInited;
     std::call_once(isInited, [&]() {
@@ -79,9 +77,11 @@ auto __fastcall hkPresent(IDXGISwapChain* pThis, UINT SyncInterval, UINT Flags) 
     ImGui_ImplDX11_NewFrame();
     ImGui_ImplWin32_NewFrame();
     ImGui::NewFrame();
-    ImGui::Begin("Cold Steel");
-    ImGui::Text("Hack menu");
-    ImGui::End();
+    if (HackFlags::showMenu) {
+        ImGui::Begin("Cold Steel");
+        ImGui::Text("Hack menu");
+        ImGui::End();
+    }
     ImGui::EndFrame();
     ImGui::Render();
     HookD3D11::pDeviceContext->OMSetRenderTargets(1, &HookD3D11::pRenderTargetView, NULL);

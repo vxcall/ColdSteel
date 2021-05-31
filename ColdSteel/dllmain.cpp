@@ -1,41 +1,34 @@
 #include "dllmain.h"
 #include <iostream>
 
-void Detach()
-{
-    FREECONSOLE()
-}
-
-auto PrintSign() -> void {
-    std::cout << std::endl;
-    std::cout << "\033[94m CCCCC   OOOOO  LL      DDDDD     SSSSS  TTTTTTT EEEEEEE EEEEEEE LL     " << std::endl;
-    std::cout << "CC    C OO   OO LL      DD  DD   SS        TTT   EE      EE      LL     " << std::endl;
-    std::cout << "CC      OO   OO LL      DD   DD   SSSSS    TTT   EEEEE   EEEEE   LL  " << std::endl;
-    std::cout << "CC    C OO   OO LL      DD   DD       SS   TTT   EE      EE      LL     " << std::endl;
-    std::cout << " CCCCC   OOOO0  LLLLLLL DDDDDD    SSSSS    TTT   EEEEEEE EEEEEEE LLLLLLL\033[39m" << std::endl;
-    std::cout << std::endl << std::endl;
-}
 
 DWORD WINAPI fMain(LPVOID lpParameter)
 {
     ALLOCCONSOLE()
-    PrintSign();
-    //auto moduleBase = reinterpret_cast<uintptr_t>(GetModuleHandle("Remnant-Win64-Shipping.exe"));
+    auto moduleBase = reinterpret_cast<uintptr_t>(GetModuleHandle("Remnant-Win64-Shipping.exe"));
+
     Hook::Init();
     HookD3D11::Place();
 
     while(true)
     {
         if (GetAsyncKeyState(VK_DELETE) & 1) break;
+        if (GetAsyncKeyState(VK_HOME) & 1) {
+            HackFlags::showMenu = !HackFlags::showMenu;
+        }
         //auto* localPlayer = GetDynamicAddress<Entity>(moduleBase, offset::dwLocalPlayer);
         Sleep(50);
     }
-    Hook::Uninit();
-    SetWindowLongPtr(HookD3D11::hWnd, GWLP_WNDPROC, (LONG_PTR)HookD3D11::originalWndProc);
-    FREECONSOLE()
+
     FreeLibraryAndExitThread(static_cast<HMODULE>(lpParameter), EXIT_SUCCESS);
 }
 
+void Detach()
+{
+    Hook::Uninit();
+    HookD3D11::UnhookWndProc();
+    FREECONSOLE()
+}
 
 BOOL APIENTRY DllMain(HMODULE hModule, DWORD dwReason, LPVOID lpReserved)
 {
