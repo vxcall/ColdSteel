@@ -7,12 +7,11 @@ namespace HookD3D11 {
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 auto WINAPI HookD3D11::hkWndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) -> LRESULT {
-
     if (HackFlags::showMenu) {
         //This function tells ImGui about how player manipulates cursor and keys and fire event on ImGui menu according to that data.
         ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, lParam);
         //By returning DefWindowProc, cursor and key event starts to not affect to the game.
-        return DefWindowProc(hWnd, msg, wParam, lParam);
+        return ::DefWindowProc(hWnd, msg, wParam, lParam);
     }
 
     //Pass the privilege back to the game.

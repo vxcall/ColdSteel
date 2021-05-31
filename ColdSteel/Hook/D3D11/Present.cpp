@@ -12,30 +12,6 @@ namespace HookD3D11 {
     ID3D11RenderTargetView*  pRenderTargetView = NULL;
 }
 
-auto HookD3D11::CreateRenderTarget() -> void {
-    ID3D11Texture2D* pBackBuffer;
-    HookD3D11::pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer);
-    HookD3D11::pDevice->CreateRenderTargetView(pBackBuffer, NULL, &HookD3D11::pRenderTargetView);
-    pBackBuffer->Release();
-}
-
-auto HookD3D11::CleanupRenderTarget() -> void {
-    if (HookD3D11::pRenderTargetView) { HookD3D11::pRenderTargetView->Release(); HookD3D11::pRenderTargetView = NULL; }
-}
-
-auto HookD3D11::InitImgui() -> void {
-    if (hWnd) {
-        HookD3D11::HookWndProc();
-        IMGUI_CHECKVERSION();
-        ImGui::CreateContext();
-        ImGuiIO& io = ImGui::GetIO(); (void)io;
-        ImGui::StyleColorsDark();
-        ImGui_ImplWin32_Init(hWnd);
-        ImGui_ImplDX11_Init(pDevice, pDeviceContext);
-        CreateRenderTarget();
-    }
-}
-
 auto CreateD3D11SwapChainDeviceContext() -> bool {
     HookD3D11::hWnd = FindWindowA(nullptr, "Remnant  ");
     //Forward instantiation of swapChainDesc to create swapchain and device later on.
@@ -67,25 +43,16 @@ tPresent oPresent = nullptr;
 auto __fastcall hkPresent(IDXGISwapChain* pThis, UINT SyncInterval, UINT Flags) -> HRESULT {
     static std::once_flag isInited;
     std::call_once(isInited, [&]() {
+        //Replacing pSwapChain, pDevice and pDeiceContext to the ones the game is actually using
         HookD3D11::pSwapChain = pThis;
         if (SUCCEEDED(HookD3D11::pSwapChain->GetDevice(__uuidof(ID3D11Device), (PVOID*)&HookD3D11::pDevice))) {
             HookD3D11::pDevice->GetImmediateContext(&HookD3D11::pDeviceContext);
         }
-        HookD3D11::InitImgui();
-        ImGui::GetIO().ImeWindowHandle = HookD3D11::hWnd;
+        HookD3D11::HookWndProc();
+        Menu::InitImGui();
     });
-    ImGui_ImplDX11_NewFrame();
-    ImGui_ImplWin32_NewFrame();
-    ImGui::NewFrame();
-    if (HackFlags::showMenu) {
-        ImGui::Begin("Cold Steel");
-        ImGui::Text("Hack menu");
-        ImGui::End();
-    }
-    ImGui::EndFrame();
-    ImGui::Render();
-    HookD3D11::pDeviceContext->OMSetRenderTargets(1, &HookD3D11::pRenderTargetView, NULL);
-    ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+
+    Menu::Render();
 
     return oPresent(pThis, SyncInterval, Flags);
 }

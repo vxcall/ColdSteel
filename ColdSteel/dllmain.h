@@ -7,8 +7,8 @@
 #include "Offset.h"
 #include "Entity.h"
 #include "Hook.h"
-#include "HookD3D11/Present.h"
-#include "HookD3D11/WndProc.h"
+#include "Hook/D3D11/Present.h"
+#include "Hook/D3D11/WndProc.h"
 #include "HackFlags.h"
 
 #define DEBUG
