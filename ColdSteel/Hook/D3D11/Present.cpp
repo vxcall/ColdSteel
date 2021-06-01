@@ -1,6 +1,4 @@
 #include "Present.h"
-#include <iostream>
-
 
 namespace HookD3D11 {
     HWND hWnd = nullptr;
@@ -49,10 +47,10 @@ auto __fastcall hkPresent(IDXGISwapChain* pThis, UINT SyncInterval, UINT Flags) 
             HookD3D11::pDevice->GetImmediateContext(&HookD3D11::pDeviceContext);
         }
         HookD3D11::HookWndProc();
-        Menu::InitImGui();
+        InitImGui();
     });
 
-    Menu::Render();
+    MainMenu::Render();
 
     return oPresent(pThis, SyncInterval, Flags);
 }

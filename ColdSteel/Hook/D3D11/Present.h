@@ -1,5 +1,7 @@
 #pragma once
+
 #include <D3D11.h>
+#include <iostream>
 #include <tuple>
 #include <mutex>
 #include "imgui.h"
@@ -7,8 +9,9 @@
 #include "imgui_impl_dx11.h"
 #include "../../Hook.h"
 #include "WndProc.h"
-#include "../../HackFlags.h"
-#include "../../Rendering/MenuBase.h"
+#include "../../GlobalFlags.h"
+#include "../../Rendering/MainMenu.h"
+#include "../../Rendering/MenuUtil.h"
 
 namespace HookD3D11 {
     auto Place() -> void;

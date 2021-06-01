@@ -4,7 +4,7 @@
 #include "imgui.h"
 #include <Windows.h>
 #include "Present.h"
-#include "../../HackFlags.h"
+#include "../../GlobalFlags.h"
 
 namespace HookD3D11 {
     extern WNDPROC oWndProc;

@@ -1,6 +1,6 @@
 #include "dllmain.h"
-#include <iostream>
 
+Entity* localPlayer = nullptr;
 
 DWORD WINAPI fMain(LPVOID lpParameter)
 {
@@ -14,9 +14,9 @@ DWORD WINAPI fMain(LPVOID lpParameter)
     {
         if (GetAsyncKeyState(VK_DELETE) & 1) break;
         if (GetAsyncKeyState(VK_HOME) & 1) {
-            HackFlags::showMenu = !HackFlags::showMenu;
+            Flags::showMenu = !Flags::showMenu;
         }
-        //auto* localPlayer = GetDynamicAddress<Entity>(moduleBase, offset::dwLocalPlayer);
+        localPlayer = GetDynamicAddress<Entity>(moduleBase, Offset::dwLocalPlayer);
         Sleep(50);
     }
 

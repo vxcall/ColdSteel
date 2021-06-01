@@ -1,5 +1,5 @@
 #pragma once
 
-namespace HackFlags {
+namespace Flags {
     extern bool showMenu;
 }

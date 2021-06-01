@@ -3,19 +3,18 @@
 #include <Windows.h>
 #include <utility>
 #include <vector>
-#include <optional>
-#include "Offset.h"
 #include "Entity.h"
+#include "Offset.h"
 #include "Hook.h"
 #include "Hook/D3D11/Present.h"
 #include "Hook/D3D11/WndProc.h"
-#include "HackFlags.h"
+#include "GlobalFlags.h"
+
+extern Entity* localPlayer;
 
 #define DEBUG
 
 #ifdef DEBUG
-#define LOGHEX(name, val) std::cout << name << ": " << std::hex << val << std::endl;
-#define LOG(name, val) std::cout << name << ": " << val << std::endl;
 #define ALLOCCONSOLE()\
 {\
     AllocConsole();\
@@ -27,8 +26,6 @@
     FreeConsole();\
 }
 #else
-#define LOGHEX(name, val)
-#define LOG(name, val)
 #define ALLOCCONSOLE()
 #define FREECONSOLE()
 #endif

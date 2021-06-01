@@ -1,19 +1,4 @@
-#include "MenuBase.h"
-
-auto Menu::Render() -> void {
-    ImGui_ImplDX11_NewFrame();
-    ImGui_ImplWin32_NewFrame();
-    ImGui::NewFrame();
-    if (HackFlags::showMenu) {
-        ImGui::Begin("Cold Steel");
-        ImGui::Text("Hack menu");
-        ImGui::End();
-    }
-    ImGui::EndFrame();
-    ImGui::Render();
-    HookD3D11::pDeviceContext->OMSetRenderTargets(1, &HookD3D11::pRenderTargetView, NULL);
-    ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
-}
+#include "MenuUtil.h"
 
 auto CreateRenderTarget() -> void {
     ID3D11Texture2D* pBackBuffer;
@@ -26,7 +11,7 @@ auto CleanupRenderTarget() -> void {
     if (HookD3D11::pRenderTargetView) { HookD3D11::pRenderTargetView->Release(); HookD3D11::pRenderTargetView = NULL; }
 }
 
-auto Menu::InitImGui() -> void {
+auto InitImGui() -> void {
     if (HookD3D11::hWnd) {
         IMGUI_CHECKVERSION();
         ImGui::CreateContext();
@@ -39,5 +24,3 @@ auto Menu::InitImGui() -> void {
         CreateRenderTarget();
     }
 }
-
-
