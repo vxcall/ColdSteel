@@ -26,7 +26,7 @@ auto Hook::Hook(LPVOID pTargetFunc, LPVOID pDetourFunc, LPVOID pOriginalFunc) ->
     }
 }
 
-auto Hook::Uninit() -> void {
+auto Hook::Restore() -> void {
     for (auto& org : Hook::originalFuncs)
     {
         MH_DisableHook(org);

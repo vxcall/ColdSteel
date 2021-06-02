@@ -7,7 +7,7 @@
 #include "imgui.h"
 #include "imgui_impl_win32.h"
 #include "imgui_impl_dx11.h"
-#include "../../Hook.h"
+#include "../Hook.h"
 #include "WndProc.h"
 #include "../../GlobalFlags.h"
 #include "../../Rendering/MainMenu.h"

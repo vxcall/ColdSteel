@@ -22,6 +22,6 @@ auto HookD3D11::HookWndProc() -> void {
     HookD3D11::oWndProc = reinterpret_cast<WNDPROC>(SetWindowLongPtr(hWnd, GWLP_WNDPROC, (__int3264)(LONG_PTR)HookD3D11::hkWndProc));
 }
 
-auto HookD3D11::UnhookWndProc() -> void {
+auto HookD3D11::RestoreWndProc() -> void {
     SetWindowLongPtr(HookD3D11::hWnd, GWLP_WNDPROC, (LONG_PTR)HookD3D11::oWndProc);
 }

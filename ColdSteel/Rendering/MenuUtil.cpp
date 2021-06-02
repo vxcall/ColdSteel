@@ -18,7 +18,9 @@ auto InitImGui() -> void {
         ImGui::StyleColorsDark();
         ImGuiIO& io = ImGui::GetIO(); (void)io;
         LoadFont(io);
-        LoadTheme();
+        EditorColorScheme e;
+        e.ApplyTheme();
+        //LoadTheme();
         ImGui_ImplWin32_Init(HookD3D11::hWnd);
         ImGui_ImplDX11_Init(HookD3D11::pDevice, HookD3D11::pDeviceContext);
         CreateRenderTarget();

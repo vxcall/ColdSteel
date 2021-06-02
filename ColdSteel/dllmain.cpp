@@ -1,11 +1,10 @@
 #include "dllmain.h"
-
 Entity* localPlayer = nullptr;
 
 DWORD WINAPI fMain(LPVOID lpParameter)
 {
     ALLOCCONSOLE()
-    auto moduleBase = reinterpret_cast<uintptr_t>(GetModuleHandle("Remnant-Win64-Shipping.exe"));
+    Modules::Initialize();
 
     Hook::Init();
     HookD3D11::Place();
@@ -16,7 +15,7 @@ DWORD WINAPI fMain(LPVOID lpParameter)
         if (GetAsyncKeyState(VK_HOME) & 1) {
             Flags::showMenu = !Flags::showMenu;
         }
-        localPlayer = GetDynamicAddress<Entity>(moduleBase, Offset::dwLocalPlayer);
+
         Sleep(50);
     }
 
@@ -25,8 +24,8 @@ DWORD WINAPI fMain(LPVOID lpParameter)
 
 void Detach()
 {
-    Hook::Uninit();
-    HookD3D11::UnhookWndProc();
+    Hook::Restore();
+    HookD3D11::RestoreWndProc();
     FREECONSOLE()
 }
 

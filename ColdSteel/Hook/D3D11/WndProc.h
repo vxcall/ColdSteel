@@ -9,6 +9,6 @@
 namespace HookD3D11 {
     extern WNDPROC oWndProc;
     auto WINAPI hkWndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) -> LRESULT;
-    auto UnhookWndProc() -> void;
+    auto RestoreWndProc() -> void;
     auto HookWndProc() -> void;
 }
