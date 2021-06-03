@@ -1,24 +1,15 @@
 #include "dllmain.h"
-Entity* localPlayer = nullptr;
 
 DWORD WINAPI fMain(LPVOID lpParameter)
 {
     ALLOCCONSOLE()
     Modules::Initialize();
-
     Hook::Init();
     HookD3D11::Place();
-
-    while(true)
-    {
-        if (GetAsyncKeyState(VK_DELETE) & 1) break;
-        if (GetAsyncKeyState(VK_HOME) & 1) {
-            Flags::showMenu = !Flags::showMenu;
-        }
-
+    while (true) {
+        if (GetAsyncKeyState (VK_DELETE) & 1) break;
         Sleep(50);
     }
-
     FreeLibraryAndExitThread(static_cast<HMODULE>(lpParameter), EXIT_SUCCESS);
 }
 

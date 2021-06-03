@@ -11,8 +11,6 @@
 #include "GlobalFlags.h"
 #include "Modules.h"
 
-extern Entity* localPlayer;
-
 #define DEBUG
 
 #ifdef DEBUG

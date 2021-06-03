@@ -11,7 +11,7 @@
 auto IsBadReadPtr(void* p) -> bool;
 
 template<typename T>
-auto GetDynamicAddress(const uintptr_t moduleBase, std::vector<uintptr_t> offsets) -> T* {
+auto GetDynamicAddress(const uintptr_t& moduleBase, std::vector<uintptr_t> offsets) -> T* {
     uintptr_t dummy = *reinterpret_cast<uintptr_t*>(moduleBase + offsets.at(0));
 
     if (!dummy)

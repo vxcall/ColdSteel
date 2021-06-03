@@ -42,6 +42,9 @@ auto __fastcall hkPresent(IDXGISwapChain* pThis, UINT SyncInterval, UINT Flags) 
     static std::once_flag isInited;
     std::call_once(isInited, [&]() {
         //Replacing pSwapChain, pDevice and pDeiceContext to the ones the game is actually using
+        HookD3D11::pDeviceContext->Release();
+        HookD3D11::pDevice->Release();
+        HookD3D11::pSwapChain->Release();
         HookD3D11::pSwapChain = pThis;
         if (SUCCEEDED(HookD3D11::pSwapChain->GetDevice(__uuidof(ID3D11Device), (PVOID*)&HookD3D11::pDevice))) {
             HookD3D11::pDevice->GetImmediateContext(&HookD3D11::pDeviceContext);

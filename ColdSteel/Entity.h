@@ -37,8 +37,13 @@ public:
 class Entity
 {
 public:
+    auto FreezeHealth() -> void;
+    auto FreezeStamina() -> void;
     union {
         DEFINE_MEMBER_0(void* base, 0x0);
+
+        DEFINE_MEMBER_N(int32_t ID, 0x18);
+
         DEFINE_MEMBER_N(bool isEnemy, 0x50);
         DEFINE_MEMBER_N(Movement* movement, 0x03A0);
         DEFINE_MEMBER_N(float health, 0x0870);
@@ -47,4 +52,5 @@ public:
     };
 }; //Size: 0x1080
 
+auto GetLocalPlayer() -> Entity*;
 auto GetEnemies() -> std::vector<Entity*>;

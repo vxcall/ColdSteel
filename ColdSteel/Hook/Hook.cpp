@@ -13,7 +13,7 @@ auto Hook::Init() -> bool {
     }
 }
 
-auto Hook::Hook(LPVOID pTargetFunc, LPVOID pDetourFunc, LPVOID pOriginalFunc) -> bool {
+auto Hook::Hook(LPVOID& pTargetFunc, LPVOID pDetourFunc, LPVOID pOriginalFunc) -> bool {
     if (MH_CreateHook(pTargetFunc, pDetourFunc, reinterpret_cast<LPVOID*>(pOriginalFunc)) == MH_OK) {
         if (MH_EnableHook(pTargetFunc) == MH_OK) {
             Hook::originalFuncs.push_back(pOriginalFunc);

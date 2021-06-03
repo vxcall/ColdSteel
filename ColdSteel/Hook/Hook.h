@@ -5,6 +5,6 @@
 
 namespace Hook {
     auto Init() -> bool;
-    auto Hook(LPVOID pTargetFunc, LPVOID pDetourFunc, LPVOID pOriginalFunc) -> bool;
+    auto Hook(LPVOID& pTargetFunc, LPVOID pDetourFunc, LPVOID pOriginalFunc) -> bool;
     auto Restore() -> void;
 }
