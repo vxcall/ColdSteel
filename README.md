@@ -5,6 +5,10 @@ A badass hack for a game called Remnant: From the Ashes.
 
 This hack is work in progress right now, you can refer to project files to see the progress.
 
+# Development has been halted
+Its ended. Not much features are not really developed.
+Tho he directx12 hooking by abusing original SwapChain, Device and DeiceContext is still worth to leave as reference.
+
 # if u want to taste this hack.
 
 **:warning: Don't download via "Download ZIP"**
